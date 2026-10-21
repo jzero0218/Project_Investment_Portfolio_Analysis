@@ -4,11 +4,13 @@
 This project analyzes historical stock returns to evaluate portfolio performance, risk, and diversification opportunities using Python.
 Status: Work in Progress (V0.1)
 
+
 **Tools**
 ．Python
 ．Pandas & NumPy
 ．Matplotlib & Seaborn
 ．SciPy
+
 
 **Current Analysis**
 ．Historical stock price analysis
@@ -17,6 +19,7 @@ Status: Work in Progress (V0.1)
 ．Portfolio variance and annualized volatility
 ．Annualized return and Sharpe Ratio
 ．Correlation heatmap visualization
+
 
 **Key Findings**
 ．TSMC (2330.TW) and Yuanta Taiwan 50 ETF (0050.TW) show a strong positive historical correlation (r ≈ 0.91).
