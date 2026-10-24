@@ -185,3 +185,66 @@ plt.xlabel("Annualized Volatility (Risk)")
 plt.ylabel("Annualized Return")
 plt.legend()
 plt.show()
+
+#Portfolio Optimization
+tsmc_weights = np.linspace(0, 1, 101) #台積電權重從0到1，分成100個點
+etf0050_weight = 1 - tsmc_weights #0050權重為1減去台積電權重
+portfolio_weights_101 = np.column_stack((tsmc_weights, etf0050_weight)) #將台積電權重和0050權重組合成一個二維陣列，第一欄是台積電權重，第二欄是
+print(portfolio_weights_101.shape)
+print(portfolio_weights_101[:5]) #印出前五筆資料
+
+portfolio_daily_return_101 = portfolio_weights_101 @ mean_daily_returns.to_numpy() #投資組合每日平均報酬率，使用矩陣乘法
+portfolio_annualized_return_101 = portfolio_daily_return_101 * 252 #年化報酬率
+
+#Portfolio Variances
+portfolio_variance_101 = []
+
+for weights in portfolio_weights_101:
+    variance = weights.T @ cov_matrix.to_numpy() @ weights
+    portfolio_variance_101.append(variance)
+
+# 101 組年化波動率
+portfolio_annual_volatility_101 = np.sqrt(portfolio_variance_101) * np.sqrt(252) #年化波動率
+print("Portfolio Annualized Volatility 101:", portfolio_annual_volatility_101[:5])
+
+#Sharpe Ratio 101
+sharpe_ratio_101 = (portfolio_annualized_return_101 - 0.0172) / portfolio_annual_volatility_101 #夏普比率
+print("Sharpe Ratio 101:", sharpe_ratio_101[:5])
+
+# Best sharpe ratio portfolio
+best_index_101 = np.argmax(sharpe_ratio_101)
+print("Best Portfolio Weights 101:", portfolio_weights_101[best_index_101])
+
+print("Best Index:", best_index_101)
+print("Best Weights:", portfolio_weights_101[best_index_101])
+print("Highest Sharpe:", sharpe_ratio_101[best_index_101])
+print("Annual Return:", portfolio_annualized_return_101[best_index_101])
+print("Annual Volatility:", portfolio_annual_volatility_101[best_index_101])
+
+#Plotting the Efficient Frontier
+plt.figure(figsize=(10, 6))
+plt.scatter(
+    portfolio_annual_volatility_101,
+    portfolio_annualized_return_101,
+    color = 'blue',
+    alpha = 0.5,
+    label = 'Portfolios'
+)
+
+# Highlighting the best portfolio
+plt.scatter(
+    portfolio_annual_volatility_101[best_index_101],
+    portfolio_annualized_return_101[best_index_101],
+    color = 'red',
+    marker = '*',
+    s = 200,
+    label = 'Highest Sharpe Ratio'
+)
+
+plt.gca().xaxis.set_major_formatter(PercentFormatter(1))
+plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
+plt.title("Portfolio Risk–Return Curve (101 Allocations)")
+plt.xlabel("Annualized Volatility")
+plt.ylabel("Annualized Return")
+plt.legend()
+plt.show()
